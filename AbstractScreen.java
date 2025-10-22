@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
+
+
+
+
 public abstract class AbstractScreen extends JPanel {
 
     public AbstractScreen() {

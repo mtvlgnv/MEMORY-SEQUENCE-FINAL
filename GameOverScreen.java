@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
+
+
+
+
 public class GameOverScreen extends AbstractScreen {
 
     private final JLabel lblTitle = new JLabel("Game Over");
