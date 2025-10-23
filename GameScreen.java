@@ -35,6 +35,8 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
     private boolean inMemorize;
     private boolean inSelect;
     private javax.swing.Timer secondTimer;
+    private long gameStartTime;
+    private final JLabel lblGameTime = new JLabel("Game Time: 0:00");
 
     private final Random rng = new Random();
 
@@ -42,12 +44,13 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
         this.frame = frame;
 
         // HUD row
-        JPanel hud = new JPanel(new GridLayout(1, 5, 8, 8));
+        JPanel hud = new JPanel(new GridLayout(1, 6, 8, 8));
         hud.add(lblTimer);
         hud.add(lblLives);
         hud.add(lblLevel);
         hud.add(lblScore);
         hud.add(lblPhase);
+        hud.add(lblGameTime);
         addRow(hud, 0);
 
         // Grid holder
@@ -72,6 +75,7 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
         lives = 3;
         level = frame.settings.getStartLevel();
         score = 0;
+        gameStartTime = System.currentTimeMillis();
 
         ensureGridForLevel(level);
         updateHud();
@@ -241,5 +245,8 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
         lblLives.setText("Lives: " + lives);
         lblLevel.setText("Level: " + level + "  (" + gridSizeCurrent + "x" + gridSizeCurrent + ")");
         lblScore.setText("Score: " + score);
+        
+        long elapsed = (System.currentTimeMillis() - gameStartTime) / 1000;
+        lblGameTime.setText("Game Time: " + (elapsed / 60) + ":" + String.format("%02d", elapsed % 60));
     }
 }
