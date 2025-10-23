@@ -21,6 +21,7 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
     // Controls
     private final JButton btnSubmit = new JButton("Submit");
     private final JButton btnNext = new JButton("Next");
+    private final JButton btnStop = new JButton("Stop Game");
 
     // Grid
     private JPanel gridPanel;
@@ -35,6 +36,11 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
     private boolean inMemorize;
     private boolean inSelect;
     private javax.swing.Timer secondTimer;
+    private long gameStartTime;
+    private final JLabel lblGameTime = new JLabel("Game Time: 0:00");
+    private int totalSelections;
+    private int correctSelections;
+    private final JLabel lblAccuracy = new JLabel("Accuracy: —");
 
     private final Random rng = new Random();
 
@@ -42,27 +48,33 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
         this.frame = frame;
 
         // HUD row
-        JPanel hud = new JPanel(new GridLayout(1, 5, 8, 8));
+        JPanel hud = new JPanel(new GridLayout(1, 6, 8, 8));
         hud.add(lblTimer);
         hud.add(lblLives);
         hud.add(lblLevel);
         hud.add(lblScore);
         hud.add(lblPhase);
+        hud.add(lblGameTime);
         addRow(hud, 0);
+
+        // Accuracy row
+        addRow(lblAccuracy, 1);
 
         // Grid holder
         gridPanel = new JPanel();
         gridPanel.setPreferredSize(new Dimension(420, 420));
-        addFillRow(gridPanel, 1, 1.0);
+        addFillRow(gridPanel, 2, 1.0);
 
         // Buttons row
         JPanel controls = new JPanel();
         controls.add(btnSubmit);
         controls.add(btnNext);
-        addRow(controls, 2);
+        controls.add(btnStop);
+        addRow(controls, 3);
 
         btnSubmit.addActionListener(e -> onSubmit());
         btnNext.addActionListener(e -> onNext());
+        btnStop.addActionListener(e -> onStop());
 
         btnSubmit.setEnabled(false);
         btnNext.setEnabled(false);
@@ -72,6 +84,9 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
         lives = 3;
         level = frame.settings.getStartLevel();
         score = 0;
+        gameStartTime = System.currentTimeMillis();
+        totalSelections = 0;
+        correctSelections = 0;
 
         ensureGridForLevel(level);
         updateHud();
@@ -191,6 +206,7 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
             return;
         }
 
+        totalSelections++;
         boolean correct = true;
         for (TileButton t : tiles) {
             if (t.isTarget() != t.isSelectedByPlayer()) {
@@ -198,6 +214,8 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
                 break;
             }
         }
+        
+        if (correct) correctSelections++;
 
         for (TileButton t : tiles) {
             t.revealResult();
@@ -237,9 +255,24 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
         startRound();
     }
 
+    private void onStop() {
+        if (secondTimer != null && secondTimer.isRunning()) {
+            secondTimer.stop();
+        }
+        frame.showStart();
+    }
+
     private void updateHud() {
         lblLives.setText("Lives: " + lives);
         lblLevel.setText("Level: " + level + "  (" + gridSizeCurrent + "x" + gridSizeCurrent + ")");
         lblScore.setText("Score: " + score);
+                
+        long elapsed = (System.currentTimeMillis() - gameStartTime) / 1000;
+        lblGameTime.setText("Game Time: " + (elapsed / 60) + ":" + String.format("%02d", elapsed % 60));
+        
+        if (totalSelections > 0) {
+            int accuracy = (correctSelections * 100) / totalSelections;
+            lblAccuracy.setText("Accuracy: " + accuracy + "%");
+        }
     }
 }

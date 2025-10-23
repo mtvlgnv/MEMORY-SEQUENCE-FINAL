@@ -27,6 +27,12 @@ public class GameOverScreen extends AbstractScreen {
     }
 
     public void setResults(int levelsPassed, int score) {
-        lblStats.setText("Levels passed: " + levelsPassed + "   |   Score: " + score);
+        int highScore = HighScoreManager.getHighScore();
+        if (score > highScore) {
+            HighScoreManager.saveHighScore(score);
+            lblStats.setText("NEW HIGH SCORE! " + score + " | Levels: " + levelsPassed);
+        } else {
+            lblStats.setText("Score: " + score + " | High Score: " + highScore + " | Levels: " + levelsPassed);
+        }
     }
 }
