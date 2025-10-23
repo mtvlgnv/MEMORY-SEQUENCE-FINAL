@@ -37,10 +37,10 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
     private boolean inSelect;
     private javax.swing.Timer secondTimer;
     private long gameStartTime;
-    private final JLabel lblGameTime = new JLabel("Game Time: 0:00");
+    private final JLabel lblGameTime = new JLabel("Time: 0:00");
     private int totalSelections;
     private int correctSelections;
-    private final JLabel lblAccuracy = new JLabel("Accuracy: —");
+    private final JLabel lblAccuracy = new JLabel("Acc: —");
 
     private final Random rng = new Random();
 
@@ -48,29 +48,27 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
         this.frame = frame;
 
         // HUD row
-        JPanel hud = new JPanel(new GridLayout(1, 6, 8, 8));
+        JPanel hud = new JPanel(new GridLayout(1, 7, 8, 8));
         hud.add(lblTimer);
         hud.add(lblLives);
         hud.add(lblLevel);
         hud.add(lblScore);
         hud.add(lblPhase);
         hud.add(lblGameTime);
+        hud.add(lblAccuracy);
         addRow(hud, 0);
-
-        // Accuracy row
-        addRow(lblAccuracy, 1);
 
         // Grid holder
         gridPanel = new JPanel();
         gridPanel.setPreferredSize(new Dimension(420, 420));
-        addFillRow(gridPanel, 2, 1.0);
+        addFillRow(gridPanel, 1, 1.0);
 
         // Buttons row
         JPanel controls = new JPanel();
         controls.add(btnSubmit);
         controls.add(btnNext);
         controls.add(btnStop);
-        addRow(controls, 3);
+        addRow(controls, 2);
 
         btnSubmit.addActionListener(e -> onSubmit());
         btnNext.addActionListener(e -> onNext());
@@ -167,7 +165,7 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
             tiles[idx].showBlack();
         }
 
-        lblPhase.setText("Phase: Memorize");
+        lblPhase.setText("Memorize");
         memSecondsLeft = Math.max(1, frame.settings.getMemSeconds());
         lblTimer.setText("Time: " + memSecondsLeft);
 
@@ -191,7 +189,7 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
     public void enterSelectPhase() {
         inMemorize = false;
         inSelect = true;
-        lblPhase.setText("Phase: Select");
+        lblPhase.setText("Select");
 
         for (TileButton t : tiles) {
             t.showWhite();
@@ -268,11 +266,11 @@ public class GameScreen extends AbstractScreen implements RoundLifecycle {
         lblScore.setText("Score: " + score);
                 
         long elapsed = (System.currentTimeMillis() - gameStartTime) / 1000;
-        lblGameTime.setText("Game Time: " + (elapsed / 60) + ":" + String.format("%02d", elapsed % 60));
+        lblGameTime.setText("Time: " + (elapsed / 60) + ":" + String.format("%02d", elapsed % 60));
         
         if (totalSelections > 0) {
             int accuracy = (correctSelections * 100) / totalSelections;
-            lblAccuracy.setText("Accuracy: " + accuracy + "%");
+            lblAccuracy.setText("Acc: " + accuracy + "%");
         }
     }
 }
