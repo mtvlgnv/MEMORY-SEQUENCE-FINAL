@@ -1,6 +1,7 @@
 # MEMORY SEQUENCE
 
 AUTHORS: MATVEI LOGINOV AND ANDRII STEPANENKO
+GITHUB REPOSITORY: https://github.com/mtvlgnv/MEMORY-SEQUENCE-FINAL.git
 
 Our project is a Java-based game inspired by Cognitive Skill tests that efficiently uses UI/UX elements and GIT as its topics of choice. In the game the player has to face randomly-generated patterns of emerging tiles on ever-enlarging screen and repeat them in order to get to the next level. Memory Sequence has the settings menu where the user can change the way he plays the game, by setting the time to remember the sequence and changing the starting difficulty. 
 
